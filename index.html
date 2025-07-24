@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>个人主页 - 张伟</title>
-  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.9/babel.min.js"></script>
+  <title>王俊勇 - 网络安全与大模型研究</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.9/babel.min.js" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -14,78 +14,106 @@
       theme: {
         extend: {
           colors: {
-            primary: '#3B82F6',
-            secondary: '#10B981',
+            primary: '#1E40AF',
+            secondary: '#22D3EE',
+            accent: '#8B5CF6',
           },
         },
       },
-    }
+    };
   </script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
   <div id="root"></div>
   <script type="text/babel">
     const { useState, useEffect } = React;
 
     // 导航栏组件
-    const Navbar = () => {
+    const Navbar = ({ lang, setLang }) => {
       const [isOpen, setIsOpen] = useState(false);
       const [isDark, setIsDark] = useState(localStorage.theme === 'dark');
 
       useEffect(() => {
-        if (isDark) {
-          document.documentElement.classList.add('dark');
-          localStorage.theme = 'dark';
-        } else {
-          document.documentElement.classList.remove('dark');
-          localStorage.theme = 'light';
-        }
+        document.documentElement.classList.toggle('dark', isDark);
+        localStorage.theme = isDark ? 'dark' : 'light';
       }, [isDark]);
+
+      const navItems = lang === 'zh' ? [
+        { id: 'home', label: '主页' },
+        { id: 'about', label: '关于' },
+        { id: 'projects', label: '项目' },
+        { id: 'contact', label: '联系方式' },
+      ] : [
+        { id: 'home', label: 'Home' },
+        { id: 'about', label: 'About' },
+        { id: 'projects', label: 'Projects' },
+        { id: 'contact', label: 'Contact' },
+      ];
 
       return (
         <nav className="bg-white dark:bg-gray-800 shadow-lg fixed w-full z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
-              <div className="flex">
-                <div className="flex-shrink-0 flex items-center">
-                  <span className="text-2xl font-bold text-primary">张伟</span>
-                </div>
+              <div className="flex items-center">
+                <span className="text-2xl font-bold text-primary">王俊勇</span>
               </div>
-              <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
-                <a href="#home" className="text-gray-700 dark:text-gray-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">主页</a>
-                <a href="#about" className="text-gray-700 dark:text-gray-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">关于</a>
-                <a href="#projects" className="text-gray-700 dark:text-gray-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">项目</a>
-                <a href="#contact" className="text-gray-700 dark:text-gray-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">联系方式</a>
+              <div className="hidden sm:flex sm:items-center space-x-4">
+                {navItems.map(item => (
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    className="text-gray-700 dark:text-gray-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  >
+                    {item.label}
+                  </a>
+                ))}
                 <button
                   onClick={() => setIsDark(!isDark)}
-                  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+                  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
                 >
                   {isDark ? '☀️' : '🌙'}
                 </button>
+                <button
+                  onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+                  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+                >
+                  {lang === 'zh' ? 'EN' : '中文'}
+                </button>
               </div>
-              <div className="-mr-2 flex items-center sm:hidden">
+              <div className="sm:hidden flex items-center">
                 <button
                   onClick={() => setIsOpen(!isOpen)}
-                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none"
+                  className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                 >
-                  <span className="sr-only">打开主菜单</span>
                   {isOpen ? '✖' : '☰'}
                 </button>
               </div>
             </div>
           </div>
           {isOpen && (
-            <div className="sm:hidden">
-              <div className="pt-2 pb-3 space-y-1">
-                <a href="#home" className="block text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium">主页</a>
-                <a href="#about" className="block text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium">关于</a>
-                <a href="#projects" className="block text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium">项目</a>
-                <a href="#contact" className="block text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium">联系方式</a>
+            <div className="sm:hidden bg-white dark:bg-gray-800">
+              <div className="px-2 pt-2 pb-3 space-y-1">
+                {navItems.map(item => (
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    className="block text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                ))}
                 <button
-                  onClick={() => setIsDark(!isDark)}
-                  className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  onClick={() => { setIsDark(!isDark); setIsOpen(false); }}
+                  className="block w-full text-left px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                 >
-                  {isDark ? '切换到亮色模式' : '切换到暗色模式'}
+                  {lang === 'zh' ? (isDark ? '切换到亮色模式' : '切换到暗色模式') : (isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode')}
+                </button>
+                <button
+                  onClick={() => { setLang(lang === 'zh' ? 'en' : 'zh'); setIsOpen(false); }}
+                  className="block w-full text-left px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                >
+                  {lang === 'zh' ? 'Switch to English' : '切换到中文'}
                 </button>
               </div>
             </div>
@@ -95,50 +123,78 @@
     };
 
     // 主页组件
-    const Home = () => (
+    const Home = ({ lang }) => (
       <section id="home" className="min-h-screen flex items-center justify-center bg-gradient-to-r from-primary to-secondary">
-        <div className="text-center">
-          <h1 className="text-5xl font-extrabold text-white animate-fade-in">欢迎访问我的主页</h1>
-          <p className="mt-4 text-xl text-white opacity-80">张伟 | 数据科学家 & 机器学习工程师</p>
+        <div className="text-center px-4">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+            {lang === 'zh' ? '欢迎访问王俊勇的个人主页' : 'Welcome to Junyong Wang\'s Homepage'}
+          </h1>
+          <p className="text-lg md:text-xl text-white opacity-80">
+            {lang === 'zh' ? '网络安全 | 大模型 | 研究员' : 'Cybersecurity | Large Models | Researcher'}
+          </p>
           <a
             href="#about"
-            className="mt-6 inline-block px-6 py-3 bg-white text-primary font-semibold rounded-lg shadow-md hover:bg-gray-100 transition"
+            className="mt-6 inline-block px-6 py-3 bg-white text-primary font-semibold rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200"
           >
-            了解更多
+            {lang === 'zh' ? '了解更多' : 'Learn More'}
           </a>
         </div>
       </section>
     );
 
     // 关于组件
-    const About = () => (
-      <section id="about" className="py-20 bg-gray-100 dark:bg-gray-900">
+    const About = ({ lang }) => (
+      <section id="about" className="py-20 bg-gray-100 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-8">关于我</h2>
-          <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-            我是张伟，一名专注于机器学习和数据科学的工程师。我在深度学习、故障诊断和电池状态预测领域有丰富经验，熟练使用CNN、LSTM和Transformer等模型。我致力于将技术应用于实际问题，创造高效且可靠的解决方案。
+          <h2 className="text-3xl font-bold text-center text-primary mb-8">
+            {lang === 'zh' ? '关于我' : 'About Me'}
+          </h2>
+          <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto text-center">
+            {lang === 'zh'
+              ? '我是王俊勇，一名专注于网络安全和大模型的研究者。我的研究涵盖网络流量分析、入侵检测系统以及基于Transformer的大型语言模型开发。我致力于通过先进的人工智能技术提升网络安全防御能力，同时探索大模型在复杂任务中的应用。'
+              : 'I am Junyong Wang, a researcher focused on cybersecurity and large-scale models. My work spans network traffic analysis, intrusion detection systems, and the development of Transformer-based large language models. I am dedicated to enhancing cybersecurity defenses through advanced AI techniques and exploring the applications of large models in complex tasks.'}
           </p>
         </div>
       </section>
     );
 
     // 项目组件
-    const Projects = () => (
-      <section id="projects" className="py-20 bg-white dark:bg-gray-800">
+    const Projects = ({ lang }) => (
+      <section id="projects" className="py-20 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-8">我的项目</h2>
+          <h2 className="text-3xl font-bold text-center text-primary mb-8">
+            {lang === 'zh' ? '我的项目' : 'My Projects'}
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md hover:shadow-xl transition">
-              <h3 className="text-xl font-semibold mb-2">轴承故障诊断系统</h3>
-              <p className="text-gray-600 dark:text-gray-300">基于CNN和LSTM的旋转机械故障诊断模型，准确率达95%以上。</p>
+            <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+              <h3 className="text-xl font-semibold text-accent mb-2">
+                {lang === 'zh' ? '智能入侵检测系统' : 'Intelligent Intrusion Detection System'}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                {lang === 'zh'
+                  ? '基于Transformer的网络流量分析模型，能够实时检测异常流量，准确率达98%。'
+                  : 'A Transformer-based network traffic analysis model capable of real-time anomaly detection with 98% accuracy.'}
+              </p>
             </div>
-            <div className="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md hover:shadow-xl transition">
-              <h3 className="text-xl font-semibold mb-2">电池SOC预测</h3>
-              <p className="text-gray-600 dark:text-gray-300">使用Transformer模型预测电动车电池状态，优化续航管理。</p>
+            <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+              <h3 className="text-xl font-semibold text-accent mb-2">
+                {lang === 'zh' ? '大模型优化框架' : 'Large Model Optimization Framework'}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                {lang === 'zh'
+                  ? '开发了一个高效的分布式训练框架，优化Transformer模型在大规模数据集上的性能。'
+                  : 'Developed an efficient distributed training framework to optimize Transformer models on large-scale datasets.'}
+              </p>
             </div>
-            <div className="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md hover:shadow-xl transition">
-              <h3 className="text-xl font-semibold mb-2">实时数据可视化</h3>
-              <p className="text-gray-600 dark:text-gray-300">基于React和D3.js的交互式数据可视化平台。</p>
+            <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+              <h3 className="text-xl font-semibold text-accent mb-2">
+                {lang === 'zh' ? '网络嗅探与解析工具' : 'Network Sniffing and Parsing Tool'}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                {lang === 'zh'
+                  ? '基于Scapy的HTTP和TLS流量解析工具，支持实时数据包分析和可视化。'
+                  : 'A Scapy-based tool for parsing HTTP and TLS traffic, supporting real-time packet analysis and visualization.'}
+              </p>
             </div>
           </div>
         </div>
@@ -146,41 +202,38 @@
     );
 
     // 联系方式组件
-    const Contact = () => (
-      <section id="contact" className="py-20 bg-gray-100 dark:bg-gray-900">
+    const Contact = ({ lang }) => (
+      <section id="contact" className="py-20 bg-gray-100 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-8">联系方式</h2>
-          <div className="text-center">
-            <p className="text-lg text-gray-700 dark:text-gray-300">邮箱: zhangwei@example.com</p>
-            <p className="text-lg text-gray-700 dark:text-gray-300">LinkedIn: linkedin.com/in/zhangwei</p>
-            <p className="text-lg text-gray-700 dark:text-gray-300">GitHub: github.com/zhangwei</p>
+          <h2 className="text-3xl font-bold text-center text-primary mb-8">
+            {lang === 'zh' ? '联系方式' : 'Contact'}
+          </h2>
+          <div className="text-center text-lg text-gray-700 dark:text-gray-300 space-y-2">
+            <p>{lang === 'zh' ? '邮箱: ' : 'Email: '}junyong.wang@example.com</p>
+            <p>LinkedIn: linkedin.com/in/junyongwang</p>
+            <p>GitHub: github.com/junyongwang</p>
           </div>
         </div>
       </section>
     );
 
     // 主应用组件
-    const App = () => (
-      <div>
-        <Navbar />
-        <Home />
-        <About />
-        <Projects />
-        <Contact />
-      </div>
-    );
+    const App = () => {
+      const [lang, setLang] = useState('zh');
+      return (
+        <div>
+          <Navbar lang={lang} setLang={setLang} />
+          <Home lang={lang} />
+          <About lang={lang} />
+          <Projects lang={lang} />
+          <Contact lang={lang} />
+        </div>
+      );
+    };
 
     // 渲染应用
-    ReactDOM.render(<App />, document.getElementById('root'));
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
   </script>
-  <style>
-    .animate-fade-in {
-      animation: fadeIn 1s ease-in;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
 </body>
 </html>
